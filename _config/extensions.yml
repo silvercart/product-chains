@@ -1,0 +1,9 @@
+---
+Name: silvercart-product-chains-extensions
+---
+SilverCart\Model\Product\Product:
+    extensions:
+        - SilverCart\ProductChains\Extensions\Model\Product\ProductExtension
+SilverCart\Model\Product\ProductTranslation:
+    extensions:
+        - SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension

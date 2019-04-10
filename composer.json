@@ -1,0 +1,21 @@
+{
+    "name": "silvercart/product-chains",
+    "type": "silverstripe-module",
+    "description": "SilverStripe Product Chains module for the SilverCart ecommerce module for SilverStripe",
+    "homepage": "http://www.silvercart.org",
+    "license": "LGPL-3.0",
+    "keywords": ["silverstripe", "silvercart", "ecommerce", "shop", "webshop", "online shop", "product chain", "product chains"],
+    "authors": [
+        {
+            "name": "SilverCart",
+            "homepage": "http://www.silvercart.org"
+        },
+        {
+            "name": "pixeltricks",
+            "homepage": "http://www.pixeltricks.de"
+        }
+    ],
+    "require": {
+        "silvercart/silvercart": "~4.1"
+    }
+}

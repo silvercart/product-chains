@@ -1,0 +1,1 @@
+<% if $ChainedProductPriceLabel %><small>{$ChainedProductPriceLabel}</small> <% end_if %>
