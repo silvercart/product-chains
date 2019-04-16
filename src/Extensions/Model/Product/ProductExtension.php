@@ -6,6 +6,7 @@ use SilverCart\Dev\Tools;
 use SilverCart\Model\Order\ShoppingCart;
 use SilverCart\Model\Order\ShoppingCartPosition;
 use SilverCart\Model\Product\Product;
+use SilverCart\Model\Product\ProductTranslation;
 use SilverCart\ProductWizard\Model\Wizard\StepOption;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
@@ -97,7 +98,7 @@ class ProductExtension extends DataExtension
                 [
                     $fields->dataFieldByName('MaximumCartQuantity')->setDescription($this->owner->fieldLabel('MaximumCartQuantityDesc')),
                     $fields->dataFieldByName('ChainedProductID')->setDescription($this->owner->fieldLabel('ChainedProductDesc')),
-                    $fields->dataFieldByName('ChainedProductPriceLabel')->setDescription($this->owner->getTranslation()->fieldLabel('ChainedProductPriceLabelDesc')),
+                    $fields->dataFieldByName('ChainedProductPriceLabel')->setDescription(ProductTranslation::singleton()->fieldLabel('ChainedProductPriceLabelDesc')),
                 ]
         )->setHeadingLevel(4)->setStartClosed(true);
         $fields->removeByName('MaximumCartQuantity');
