@@ -766,6 +766,17 @@ class ProductExtension extends DataExtension
     }
     
     /**
+     * Returns whether this product is part of a product chain.
+     * 
+     * @return bool
+     */
+    public function isInProductChain() : bool
+    {
+        return $this->hasChainedProduct()
+            || $this->hasChainedParentProduct();
+    }
+    
+    /**
      * Returns whether the current add-to-cart routine is going through the chain.
      * 
      * @return bool
