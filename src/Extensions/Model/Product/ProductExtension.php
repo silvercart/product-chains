@@ -378,8 +378,12 @@ class ProductExtension extends DataExtension
         $productIDMap = $this->getProductWizardCartSummaryProductIDMap($cartData);
         $productIDKey = array_search($product->ID, $productIDMap);
         if ($productIDKey === false) {
+            if (empty($cartData)) {
+                $productIDKey = 1;
+            } else {
+                $productIDKey = max(array_keys($cartData)) + 1;
+            }
             $positionData            = StepOption::getCartPositionData($quantity, $product);
-            $productIDKey            = max(array_keys($cartData)) + 1;
             $cartData[$productIDKey] = $positionData;
         } else {
             $positionData = $cartData[$productIDKey];
