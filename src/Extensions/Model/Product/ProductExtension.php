@@ -8,6 +8,7 @@ use SilverCart\Model\Order\ShoppingCartPosition;
 use SilverCart\Model\Product\Product;
 use SilverCart\Model\Product\ProductTranslation;
 use SilverCart\ProductWizard\Model\Wizard\StepOption;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\DataExtension;
@@ -78,6 +79,7 @@ class ProductExtension extends DataExtension
      */
     private static $casting = [
         'ChainedProductPriceLabel' => 'Text',
+        'ProductNumberAndTitle'    => 'Text',
     ];
     
     /**
@@ -92,12 +94,14 @@ class ProductExtension extends DataExtension
      */
     public function updateCMSFields(FieldList $fields) : void
     {
+        $fields->removeByName('ChainedProductID');
+        $source = Product::get()->map('ID', 'ProductNumberAndTitle')->toArray();
         $toggle = ToggleCompositeField::create(
                 'ChainedProductToggle',
                 $this->owner->fieldLabel('ChainedProduct'),
                 [
                     $fields->dataFieldByName('MaximumCartQuantity')->setDescription($this->owner->fieldLabel('MaximumCartQuantityDesc')),
-                    $fields->dataFieldByName('ChainedProductID')->setDescription($this->owner->fieldLabel('ChainedProductDesc')),
+                    DropdownField::create('ChainedProductID', $this->owner->fieldLabel('ChainedProduct'), $source)->setDescription($this->owner->fieldLabel('ChainedProductDesc')),
                     $fields->dataFieldByName('ChainedProductPriceLabel')->setDescription(ProductTranslation::singleton()->fieldLabel('ChainedProductPriceLabelDesc')),
                 ]
         )->setHeadingLevel(4)->setStartClosed(true);
@@ -747,6 +751,20 @@ class ProductExtension extends DataExtension
     public function getChainedProductPriceLabel() : ?string
     {
         return $this->owner->getTranslationFieldValue('ChainedProductPriceLabel');
+    }
+    
+    /**
+     * Returns the product number with title.
+     * 
+     * @return string
+     */
+    public function getProductNumberAndTitle() : string
+    {
+        $string = $this->owner->Title;
+        if (!empty($this->owner->ProductNumberShop)) {
+            $string = "{$this->owner->ProductNumberShop} | {$string}";
+        }
+        return $string;
     }
     
     /**
