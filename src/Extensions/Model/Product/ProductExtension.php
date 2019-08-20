@@ -12,6 +12,7 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBInt;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
@@ -83,6 +84,22 @@ class ProductExtension extends DataExtension
     ];
     
     /**
+     * Resets self assigned cheined product relations.
+     * 
+     * @return void
+     * 
+     * @author Sebastian Diel <sdiel@pixeltricks.de>
+     * @since 20.08.2019
+     */
+    public function requireDefaultRecords() : void
+    {
+        if (get_class($this->owner) === Product::class) {
+            $table = $this->owner->config()->table_name;
+            DB::query("UPDATE {$table} SET {$table}.ChainedProductID = 0 WHERE {$table}.ChainedProductID = {$table}.ID");
+        }
+    }
+    
+    /**
      * Updates the CMS fields.
      * 
      * @param FieldList $fields Fields to update
@@ -95,7 +112,7 @@ class ProductExtension extends DataExtension
     public function updateCMSFields(FieldList $fields) : void
     {
         $fields->removeByName('ChainedProductID');
-        $source = Product::get()->map('ID', 'ProductNumberAndTitle')->toArray();
+        $source = ['' => ''] + Product::get()->exclude('ID', $this->owner->ID)->map('ID', 'ProductNumberAndTitle')->toArray();
         $toggle = ToggleCompositeField::create(
                 'ChainedProductToggle',
                 $this->owner->fieldLabel('ChainedProduct'),
