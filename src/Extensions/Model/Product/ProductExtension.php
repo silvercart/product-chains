@@ -781,7 +781,7 @@ class ProductExtension extends DataExtension
         if (!empty($this->owner->ProductNumberShop)) {
             $string = "{$this->owner->ProductNumberShop} | {$string}";
         }
-        return $string;
+        return (string) $string;
     }
     
     /**
