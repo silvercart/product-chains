@@ -1,6 +1,6 @@
 {
     "name": "silvercart/product-chains",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "SilverStripe Product Chains module for the SilverCart ecommerce module for SilverStripe",
     "homepage": "http://www.silvercart.org",
     "license": "LGPL-3.0",
