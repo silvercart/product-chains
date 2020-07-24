@@ -4,7 +4,7 @@ it:
         ChainedProduct: 'Prodotto seguente'
         ChainedProductDesc: 'L''articolo qui specificato verrà aggiunto al carrello se il cliente supera il numero massimo acquistabile.'
         MaximumCartQuantity: 'Numero massimo acquistabile'
-        MaximumCartQuantityDesc: 'Se all''interno del carrello questo numero viene superato, la differenza tra il numero specificato e il numero massimo che può essere acquistato viene utilizzata per aggiungere l''articolo successivo al carrello.'
+        MaximumCartQuantityDesc: 'Se all''interno del carrello questo numero viene superato, la differenza tra il numero specificato e il numero massimo che può essere acquistato viene utilizzata per aggiungere l''articolo  in eccedenza al carrello.'
     SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
         ChainedProductPriceLabel: 'Nota prezzo'
         ChainedProductPriceLabelDesc: 'Nota che precede il prezzo di questo articolo. Ad esempio, "prima licenza" su questo articolo e "ogni licenza aggiuntiva" sull''articolo in successione.'
