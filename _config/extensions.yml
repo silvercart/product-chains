@@ -1,6 +1,12 @@
 ---
 Name: silvercart-product-chains-extensions
 ---
+SilverCart\Forms\RemovePositionForm:
+    extensions:
+        - SilverCart\ProductChains\Extensions\Forms\RemovePositionFormExtension
+SilverCart\Model\Order\ShoppingCart:
+    extensions:
+        - SilverCart\ProductChains\Extensions\Model\Order\ShoppingCartExtension
 SilverCart\Model\Product\Product:
     extensions:
         - SilverCart\ProductChains\Extensions\Model\Product\ProductExtension

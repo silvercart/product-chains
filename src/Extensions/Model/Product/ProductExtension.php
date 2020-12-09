@@ -5,12 +5,15 @@ namespace SilverCart\ProductChains\Extensions\Model\Product;
 use SilverCart\Dev\Tools;
 use SilverCart\Model\Order\ShoppingCart;
 use SilverCart\Model\Order\ShoppingCartPosition;
+use SilverCart\Model\Pages\CartPage;
 use SilverCart\Model\Product\Product;
 use SilverCart\Model\Product\ProductTranslation;
 use SilverCart\ProductWizard\Model\Wizard\StepOption;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBInt;
@@ -468,6 +471,23 @@ class ProductExtension extends DataExtension
             $addToCartAllowed = false;
             return;
         }
+        $request = Controller::curr()->getRequest();
+        $backURL = $request->postVar('BackURL');
+        $page    = SiteTree::get_by_link($backURL);
+        if ($page instanceof CartPage) {
+            if ($position === null) {
+                $position = $product->getShoppingCartPosition($cartID);
+            }
+            if ($position instanceof ShoppingCartPosition) {
+                $difference = $quantity - $position->Quantity;
+                if ($increment) {
+                    $quantity = $difference;
+                } else {
+                    $total    = $this->getChainedShoppingCartQuantity($cartID);
+                    $quantity = $total + $difference;
+                }
+            }
+        }
         if ($increment) {
             $position = $this->incrementShoppingCartQuantity($cartID, $quantity, $addToCartAllowed);
         } else {
@@ -497,6 +517,35 @@ class ProductExtension extends DataExtension
             $product = $product->ChainedParentProduct();
             ShoppingCart::removeProduct(['productID' => $product->ID]);
         }
+    }
+    
+    /**
+     * Returns the total shopping cart quantity of the whole product chain.
+     * 
+     * @param int $cartID Cart ID
+     * 
+     * @return float
+     */
+    public function getChainedShoppingCartQuantity(int $cartID) : float
+    {
+        $quantity = 0;
+        $product  = $this->owner;
+        /* @var $product Product */
+        $parent   = $product;
+        do {
+            $position  = $parent->getShoppingCartPosition($cartID);
+            $quantity += $position->Quantity;
+            $parent    = $parent->ChainedParentProduct();
+        } while ($parent->exists());
+        if ($product->hasChainedProduct()) {
+            $chainedProduct = $product->ChainedProduct();
+            while ($chainedProduct->exists()) {
+                $position       = $chainedProduct->getShoppingCartPosition($cartID);
+                $quantity      += $position->Quantity;
+                $chainedProduct = $chainedProduct->ChainedProduct();
+            }
+        }
+        return $quantity;
     }
     
     /**
@@ -719,7 +768,7 @@ class ProductExtension extends DataExtension
      * 
      * @return ShoppingCartPosition
      */
-    public function setShoppingCartQuantity(int $cartID, float $quantity, bool &$addToCartAllowed) : ?ShoppingCartPosition
+    public function setShoppingCartQuantity(int $cartID, float $quantity, bool &$addToCartAllowed = null) : ?ShoppingCartPosition
     {
         $product = $this->owner;
         /* @var $product Product */
