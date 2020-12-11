@@ -2,6 +2,7 @@
 
 namespace SilverCart\ProductChains\Extensions\Model\Product;
 
+use Moo\HasOneSelector\Form\Field as HasOneSelector;
 use SilverCart\Dev\Tools;
 use SilverCart\Model\Order\ShoppingCart;
 use SilverCart\Model\Order\ShoppingCartPosition;
@@ -114,14 +115,20 @@ class ProductExtension extends DataExtension
      */
     public function updateCMSFields(FieldList $fields) : void
     {
+        if (class_exists(HasOneSelector::class)) {
+            $chainedProductField = HasOneSelector::create('ChainedProduct', $this->owner->fieldLabel('ChainedProduct'), $this->owner, Product::class)->setLeftTitle($this->owner->fieldLabel('ChainedProductDesc'));
+            $chainedProductField->removeAddable();
+        } else {
+            $source              = ['' => ''] + Product::get()->exclude('ID', $this->owner->ID)->map('ID', 'ProductNumberAndTitle')->toArray();
+            $chainedProductField = DropdownField::create('ChainedProductID', $this->owner->fieldLabel('ChainedProduct'), $source)->setDescription($this->owner->fieldLabel('ChainedProductDesc'));
+        }
         $fields->removeByName('ChainedProductID');
-        $source = ['' => ''] + Product::get()->exclude('ID', $this->owner->ID)->map('ID', 'ProductNumberAndTitle')->toArray();
         $toggle = ToggleCompositeField::create(
                 'ChainedProductToggle',
                 $this->owner->fieldLabel('ChainedProduct'),
                 [
                     $fields->dataFieldByName('MaximumCartQuantity')->setDescription($this->owner->fieldLabel('MaximumCartQuantityDesc')),
-                    DropdownField::create('ChainedProductID', $this->owner->fieldLabel('ChainedProduct'), $source)->setDescription($this->owner->fieldLabel('ChainedProductDesc')),
+                    $chainedProductField,
                     $fields->dataFieldByName('ChainedProductPriceLabel')->setDescription(ProductTranslation::singleton()->fieldLabel('ChainedProductPriceLabelDesc')),
                 ]
         )->setHeadingLevel(4)->setStartClosed(true);
