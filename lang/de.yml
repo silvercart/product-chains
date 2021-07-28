@@ -5,6 +5,7 @@ de:
         ChainedProductDesc: 'Der hier angegebene Artikel wird in den Warenkorb gelegt, wenn der Kunde die maximal kaufbare Anzahl überschreitet.'
         MaximumCartQuantity: 'Maximal kaufbare Anzahl'
         MaximumCartQuantityDesc: 'Wird diese Anzahl im Warenkorb überschritten, wird die Differenz der angegebenen Anzahl und der maximal kaufbaren Anzahl verwendet, um den Folgeartikel in den Warenkorb zu legen.'
+        ShowChainedProductPriceLabel: 'Preis-Hinweis auch ohne verknüpften Folgeartikel anzeigen'
     SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
         ChainedProductPriceLabel: Preis-Hinweis
         ChainedProductPriceLabelDesc: 'Hinweis, der dem Preis dieses Artikels vorangestellt wird. Zum Beispiel "erste Lizenz" an diesem Artikel und "je weiterer Lizenz" am Folgeartikel.'

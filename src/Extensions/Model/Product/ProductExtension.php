@@ -17,6 +17,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBInt;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
@@ -59,7 +60,8 @@ class ProductExtension extends DataExtension
      * @var array
      */
     private static $db = [
-        'MaximumCartQuantity' => DBInt::class,
+        'MaximumCartQuantity'          => DBInt::class,
+        'ShowChainedProductPriceLabel' => DBBoolean::class,
     ];
     /**
      * Has one relations.
@@ -130,11 +132,13 @@ class ProductExtension extends DataExtension
                     $fields->dataFieldByName('MaximumCartQuantity')->setDescription($this->owner->fieldLabel('MaximumCartQuantityDesc')),
                     $chainedProductField,
                     $fields->dataFieldByName('ChainedProductPriceLabel')->setDescription(ProductTranslation::singleton()->fieldLabel('ChainedProductPriceLabelDesc')),
+                    $fields->dataFieldByName('ShowChainedProductPriceLabel'),
                 ]
         )->setHeadingLevel(4)->setStartClosed(true);
         $fields->removeByName('MaximumCartQuantity');
         $fields->removeByName('ChainedProductID');
         $fields->removeByName('ChainedProductPriceLabel');
+        $fields->removeByName('ShowChainedProductPriceLabel');
         
         $this->owner->extend('updateFieldsForChainedProduct', $toggle, $fields);
         $fields->insertAfter($toggle, 'TimeGroupToggle');
@@ -195,6 +199,9 @@ class ProductExtension extends DataExtension
         if (!$this->hasChainedProduct()
          && !$this->hasChainedParentProduct()
         ) {
+            if ($this->owner->ShowChainedProductPriceLabel) {
+                $content .= $this->owner->renderWith(self::class . '_BeforePriceNice');
+            }
             return;
         }
         if ($this->isUpdateAfterPriceNiceContent()
