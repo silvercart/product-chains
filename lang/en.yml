@@ -1,11 +1,11 @@
 en:
-    SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
-        ChainedParentProduct: 'Parent Product'
-        ChainedProduct: 'Chained Product'
-        ChainedProductDesc: 'The item specified here will be placed in the shopping cart if the customer exceeds the maximum number that can be purchased.'
-        MaximumCartQuantity: 'Maximum of purchasable items'
-        MaximumCartQuantityDesc: 'If this number is exceeded in the shopping cart, the difference between the specified number and the maximum number that can be bought is used to place the subsequent article in the shopping cart.'
-        ShowChainedProductPriceLabel: 'Show price note without chained product relation'
-    SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
-        ChainedProductPriceLabel: 'Price note'
-        ChainedProductPriceLabelDesc: 'Note preceding the price of this item. For example, "first license" on this article and "each additional license" on the subsequent article.'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Parent Product'
+    ChainedProduct: 'Chained Product'
+    ChainedProductDesc: 'The item specified here will be placed in the shopping cart if the customer exceeds the maximum number that can be purchased.'
+    MaximumCartQuantity: 'Maximum of purchasable items'
+    MaximumCartQuantityDesc: 'If this number is exceeded in the shopping cart, the difference between the specified number and the maximum number that can be bought is used to place the subsequent article in the shopping cart.'
+    ShowChainedProductPriceLabel: 'Show price note without chained product relation'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Price note'
+    ChainedProductPriceLabelDesc: 'Note preceding the price of this item. For example, "first license" on this article and "each additional license" on the subsequent article.'

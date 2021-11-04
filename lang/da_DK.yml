@@ -1,10 +1,10 @@
 da_DK:
-    SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
-        ChainedParentProduct: 'Overordnet produkt'
-        ChainedProduct: 'Kædet produkt'
-        ChainedProductDesc: 'Den vare, der angives her, vil blive tilføjet til indkøbskurven, hvis kunden overskrider det maksimale antal, der kan købes.'
-        MaximumCartQuantity: 'Maksimalt antal, der kan købes'
-        MaximumCartQuantityDesc: 'Hvis dette antal overskrides i indkøbskurven, bruges forskellen mellem det angivne antal og det maksimale antal, der kan købes, til at tilføje den efterfølgende vare til indkøbskurven.'
-    SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
-        ChainedProductPriceLabel: 'Pris note'
-        ChainedProductPriceLabelDesc: 'Note forud for prisen på denne vare. For eksempel "første licens" på denne artikel og "hver ekstra licens" på den efterfølgende artikel.'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Overordnet produkt'
+    ChainedProduct: 'Kædet produkt'
+    ChainedProductDesc: 'Den vare, der angives her, vil blive tilføjet til indkøbskurven, hvis kunden overskrider det maksimale antal, der kan købes.'
+    MaximumCartQuantity: 'Maksimalt antal, der kan købes'
+    MaximumCartQuantityDesc: 'Hvis dette antal overskrides i indkøbskurven, bruges forskellen mellem det angivne antal og det maksimale antal, der kan købes, til at tilføje den efterfølgende vare til indkøbskurven.'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Pris note'
+    ChainedProductPriceLabelDesc: 'Note forud for prisen på denne vare. For eksempel "første licens" på denne artikel og "hver ekstra licens" på den efterfølgende artikel.'
