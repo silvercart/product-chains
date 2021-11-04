@@ -5,6 +5,7 @@ nl:
     ChainedProductDesc: 'Het hier aangegeven artikel wordt toegevoegd aan het winkelwagentje als de klant het maximumaantal overschrijdt dat kan worden gekocht.'
     MaximumCartQuantity: 'Maximaal aantal dat kan worden gekocht'
     MaximumCartQuantityDesc: 'Als dit aantal in de winkelwagen wordt overschreden, wordt het verschil tussen het opgegeven aantal en het maximaal te kopen aantal gebruikt om het volgende artikel in de winkelwagen te plaatsen.'
+    ShowChainedProductPriceLabel: 'Toon prijsnotitie zonder gekoppelde productrelatie'
   SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
     ChainedProductPriceLabel: Prijsopgave
     ChainedProductPriceLabelDesc: 'Merk op dat dit voorafgaat aan de prijs van dit artikel. Bijvoorbeeld, "eerste licentie" op dit item en "elke extra licentie" op het volgende artikel.'
