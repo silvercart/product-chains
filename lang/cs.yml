@@ -1,0 +1,11 @@
+cs:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Zdrojový článek'
+    ChainedProduct: 'Navazující článek'
+    ChainedProductDesc: 'Zde zadaná položka bude přidána do nákupního košíku, pokud zákazník překročí maximální počet, který lze zakoupit.'
+    MaximumCartQuantity: 'Maximální počet, který lze zakoupit'
+    MaximumCartQuantityDesc: 'Pokud je tento počet v nákupním košíku překročen, rozdíl mezi zadaným počtem a maximálním počtem, který lze zakoupit, se použije k přidání další položky do nákupního košíku.'
+    ShowChainedProductPriceLabel: 'Zobrazit cenovou nápovědu i bez propojeného navazujícího článku'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Náznak ceny'
+    ChainedProductPriceLabelDesc: 'Poznámka, která předchází ceně této položky. Například "první licence" u této položky a "na další licenci" u následující položky.'

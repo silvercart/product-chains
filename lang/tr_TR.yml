@@ -1,0 +1,11 @@
+tr_TR:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Başlangıç makalesi'
+    ChainedProduct: 'Takip eden makale'
+    ChainedProductDesc: 'Burada belirtilen ürün, müşterinin satın alabileceği maksimum sayıyı aşması durumunda alışveriş sepetine atılacaktır.'
+    MaximumCartQuantity: 'Satın alınabilecek maksimum sayı'
+    MaximumCartQuantityDesc: 'Alışveriş sepetinde bu sayı aşılırsa, belirtilen sayı ile satın alınabilecek maksimum sayı arasındaki fark, bir sonraki ürünü alışveriş sepetine yerleştirmek için kullanılır.'
+    ShowChainedProductPriceLabel: 'Bağlantılı takip öğeleri olmadan bile fiyat bilgilerini göster'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Fiyat bildirimi'
+    ChainedProductPriceLabelDesc: 'Bu makalenin fiyatından önce geldiğini unutmayın. Örneğin, bu makaledeki "ilk lisans" ve sonraki makaledeki "her ek lisans".'

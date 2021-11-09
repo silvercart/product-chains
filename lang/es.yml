@@ -1,0 +1,11 @@
+es:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Artículo de origen'
+    ChainedProduct: 'Artículo de seguimiento'
+    ChainedProductDesc: 'El artículo especificado aquí se añadirá a la cesta de la compra si el cliente supera el número máximo que puede comprar.'
+    MaximumCartQuantity: 'Número máximo que se puede comprar'
+    MaximumCartQuantityDesc: 'Si se supera este número en la cesta de la compra, la diferencia entre el número especificado y el número máximo que se puede comprar se utiliza para añadir el siguiente artículo a la cesta de la compra.'
+    ShowChainedProductPriceLabel: 'Mostrar la sugerencia del precio incluso sin el artículo de seguimiento vinculado'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Sugerencia de precio'
+    ChainedProductPriceLabelDesc: 'Nota que precede al precio de este artículo. Por ejemplo, "primera licencia" en este punto y "por otra licencia" en el siguiente.'

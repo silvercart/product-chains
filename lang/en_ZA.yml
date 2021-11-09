@@ -1,0 +1,11 @@
+en_ZA:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Source article'
+    ChainedProduct: 'Follow-up article'
+    ChainedProductDesc: 'The item specified here will be added to the shopping cart if the customer exceeds the maximum number that can be purchased.'
+    MaximumCartQuantity: 'Maximum number that can be bought'
+    MaximumCartQuantityDesc: 'If this number is exceeded in the shopping basket, the difference between the specified number and the maximum number that can be purchased is used to add the subsequent item to the shopping basket.'
+    ShowChainedProductPriceLabel: 'Show price hint even without linked follow-up article'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Price hint'
+    ChainedProductPriceLabelDesc: 'Note that precedes the price of this item. For example, "first licence" on this item and "per further licence" on the subsequent item.'

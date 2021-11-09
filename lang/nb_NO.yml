@@ -1,0 +1,11 @@
+nb_NO:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: Startartikkel
+    ChainedProduct: Oppfølgingsartikkel
+    ChainedProductDesc: 'Varen som er spesifisert her vil legges i handlekurven dersom kunden overskrider maks antall som kan kjøpes.'
+    MaximumCartQuantity: 'Maks antall som kan kjøpes'
+    MaximumCartQuantityDesc: 'Dersom dette tallet overskrides i handlekurven, brukes differansen mellom spesifisert antall og maksimalt antall som kan kjøpes til å legge neste vare i handlekurven.'
+    ShowChainedProductPriceLabel: 'Vis prisinformasjon selv uten tilknyttede oppfølgingsartikler'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: Prisvarsel
+    ChainedProductPriceLabelDesc: 'Merk at det kommer før prisen på denne artikkelen. For eksempel "første lisens" i denne artikkelen og "hver ekstra lisens" i den følgende artikkelen.'

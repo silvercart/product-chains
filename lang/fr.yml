@@ -1,0 +1,11 @@
+fr:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Article source'
+    ChainedProduct: 'Article de suivi'
+    ChainedProductDesc: 'L''article spécifié ici sera ajouté au panier si le client dépasse le nombre maximal d''articles pouvant être achetés.'
+    MaximumCartQuantity: 'Nombre maximum pouvant être acheté'
+    MaximumCartQuantityDesc: 'Si ce nombre est dépassé dans le panier, la différence entre le nombre spécifié et le nombre maximum pouvant être acheté est utilisée pour ajouter l''article suivant au panier.'
+    ShowChainedProductPriceLabel: 'Afficher une indication de prix même sans article de suivi lié'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Indication du prix'
+    ChainedProductPriceLabelDesc: 'Note qui précède le prix de cet article. Par exemple, "première licence" sur cet article et "par autre licence" sur l''article suivant.'

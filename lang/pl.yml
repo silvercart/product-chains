@@ -1,0 +1,11 @@
+pl:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Artykuł źródłowy'
+    ChainedProduct: 'Artykuł uzupełniający'
+    ChainedProductDesc: 'Pozycja określona tutaj zostanie dodana do koszyka, jeśli klient przekroczy maksymalną liczbę, którą można zakupić.'
+    MaximumCartQuantity: 'Maksymalna liczba, jaką można kupić'
+    MaximumCartQuantityDesc: 'Jeśli ta liczba zostanie przekroczona w koszyku, różnica między podaną liczbą a maksymalną liczbą, jaką można kupić, jest wykorzystywana do dodania kolejnej pozycji do koszyka.'
+    ShowChainedProductPriceLabel: 'Pokaż podpowiedź cenową nawet bez podlinkowanego artykułu uzupełniającego'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Wskazówka cenowa'
+    ChainedProductPriceLabelDesc: 'Uwaga, która poprzedza cenę tej pozycji. Na przykład "pierwsza licencja" w tej pozycji i "za kolejną licencję" w następnej pozycji.'

@@ -5,6 +5,7 @@ fr_BE:
     ChainedProductDesc: 'L''article spécifié ici sera ajouté au panier si le client dépasse le nombre maximum d''articles qu''il peut acheter.'
     MaximumCartQuantity: 'Nombre maximum à acheter'
     MaximumCartQuantityDesc: 'Si ce nombre est dépassé dans le panier, la différence entre le nombre spécifié et le nombre maximum qui peut être acheté est utilisée pour placer l''article suivant dans le panier.'
+    ShowChainedProductPriceLabel: 'Afficher une indication de prix même sans article de suivi lié'
   SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
     ChainedProductPriceLabel: 'Note de prix'
     ChainedProductPriceLabelDesc: 'Note qui précède le prix de cet article. Par exemple, "première licence" pour cet article et "chaque licence supplémentaire" pour l''article suivant.'

@@ -1,0 +1,11 @@
+sv:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: Källartikel
+    ChainedProduct: 'Uppföljande artikel'
+    ChainedProductDesc: 'Artikeln som anges här läggs till i kundvagnen om kunden överskrider det maximala antalet som kan köpas.'
+    MaximumCartQuantity: 'Högsta antal som kan köpas'
+    MaximumCartQuantityDesc: 'Om detta antal överskrids i varukorgen används skillnaden mellan det angivna antalet och det maximala antalet som kan köpas för att lägga till den efterföljande varan i varukorgen.'
+    ShowChainedProductPriceLabel: 'Visa pristips även utan länkad uppföljningsartikel'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Pris tips'
+    ChainedProductPriceLabelDesc: 'Observera att priset på denna produkt föregås av en notering. Till exempel "första licens" på denna punkt och "per ytterligare licens" på den efterföljande punkten.'

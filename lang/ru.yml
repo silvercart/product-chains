@@ -1,0 +1,11 @@
+ru:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Источник статьи'
+    ChainedProduct: 'Последующая статья'
+    ChainedProductDesc: 'Указанный здесь товар будет добавлен в корзину, если покупатель превысит максимальное количество, которое можно приобрести.'
+    MaximumCartQuantity: 'Максимальное количество, которое можно купить'
+    MaximumCartQuantityDesc: 'Если это количество в корзине превышено, то разница между указанным количеством и максимальным количеством, которое можно приобрести, используется для добавления последующего товара в корзину.'
+    ShowChainedProductPriceLabel: 'Показывать подсказку о цене даже без связанной последующей статьи'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Ценовой намёк'
+    ChainedProductPriceLabelDesc: 'Обратите внимание, что предшествует цене этого товара. Например, "первая лицензия" в этом пункте и "на последующие лицензии" в последующем пункте.'

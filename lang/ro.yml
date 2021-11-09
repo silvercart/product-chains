@@ -1,0 +1,11 @@
+ro:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: 'Articolul sursă'
+    ChainedProduct: 'Articol de urmărire'
+    ChainedProductDesc: 'Elementul specificat aici va fi adăugat în coșul de cumpărături dacă clientul depășește numărul maxim care poate fi cumpărat.'
+    MaximumCartQuantity: 'Numărul maxim care poate fi cumpărat'
+    MaximumCartQuantityDesc: 'În cazul în care acest număr este depășit în coșul de cumpărături, diferența dintre numărul specificat și numărul maxim care poate fi achiziționat este utilizată pentru a adăuga articolul următor în coșul de cumpărături.'
+    ShowChainedProductPriceLabel: 'Afișați indicii de preț chiar și fără un articol de urmărire legat'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Sugestie de preț'
+    ChainedProductPriceLabelDesc: 'Notă care precede prețul acestui articol. De exemplu, "prima licență" la acest articol și "pentru fiecare altă licență" la articolul următor.'

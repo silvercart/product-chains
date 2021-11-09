@@ -1,0 +1,11 @@
+fi:
+  SilverCart\ProductChains\Extensions\Model\Product\ProductExtension:
+    ChainedParentProduct: Lähdeartikkeli
+    ChainedProduct: Seuranta-artikkeli
+    ChainedProductDesc: 'Tässä määritetty tuote lisätään ostoskoriin, jos asiakas ylittää ostettavien tuotteiden enimmäismäärän.'
+    MaximumCartQuantity: 'Enimmäismäärä, joka voidaan ostaa'
+    MaximumCartQuantityDesc: 'Jos tämä määrä ylittyy ostoskorissa, määritetyn määrän ja ostettavissa olevan enimmäismäärän välinen erotus käytetään seuraavan kohteen lisäämiseen ostoskoriin.'
+    ShowChainedProductPriceLabel: 'Näytä hintavihje myös ilman linkitettyä jatkoartikkelia'
+  SilverCart\ProductChains\Extensions\Model\Product\ProductTranslationExtension:
+    ChainedProductPriceLabel: 'Hinta vihje'
+    ChainedProductPriceLabelDesc: 'Huomautus, joka edeltää tämän tuotteen hintaa. Esimerkiksi "ensimmäinen lisenssi" tässä kohdassa ja "per uusi lisenssi" seuraavassa kohdassa.'
