@@ -40,7 +40,9 @@ class ShoppingCartExtension extends DataExtension
         }
         $cartID  = $this->owner->ID;
         $product = Product::get()->byID($data['productID']);
-        if ($product->isGoingThroughTheChain()) {
+        if ($product === null
+         || $product->isGoingThroughTheChain()
+        ) {
             return;
         }
         $total    = $product->getChainedShoppingCartQuantity($cartID);
