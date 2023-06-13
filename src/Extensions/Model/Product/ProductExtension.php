@@ -10,11 +10,11 @@ use SilverCart\Model\Pages\CartPage;
 use SilverCart\Model\Product\Product;
 use SilverCart\Model\Product\ProductTranslation;
 use SilverCart\ProductWizard\Model\Wizard\StepOption;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ToggleCompositeField;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBBoolean;
@@ -32,6 +32,8 @@ use SilverStripe\Security\Security;
  * @since 08.04.2019
  * @copyright 2019 pixeltricks GmbH
  * @license see license file in modules root directory
+ * 
+ * @property Product $owner Owner
  */
 class ProductExtension extends DataExtension
 {
@@ -41,25 +43,25 @@ class ProductExtension extends DataExtension
      *
      * @var bool
      */
-    protected $isGoingThroughTheChain = false;
+    protected bool $isGoingThroughTheChain = false;
     /**
      * Stores whether the updateAfterPriceNiceContent method is called.
      *
      * @var bool
      */
-    protected $isUpdateAfterPriceNiceContent = false;
+    protected bool $isUpdateAfterPriceNiceContent = false;
     /**
      * Stores whether the updateBeforePriceNiceContent method is called.
      *
      * @var bool
      */
-    protected $isUpdateBeforePriceNiceContent = false;
+    protected bool $isUpdateBeforePriceNiceContent = false;
     /**
      * Has one relations.
      *
      * @var array
      */
-    private static $db = [
+    private static array $db = [
         'MaximumCartQuantity'          => DBInt::class,
         'ShowChainedProductPriceLabel' => DBBoolean::class,
     ];
@@ -68,7 +70,7 @@ class ProductExtension extends DataExtension
      *
      * @var array
      */
-    private static $has_one = [
+    private static array $has_one = [
         'ChainedProduct' => Product::class,
     ];
     /**
@@ -76,7 +78,7 @@ class ProductExtension extends DataExtension
      *
      * @var array
      */
-    private static $belongs_to = [
+    private static array $belongs_to = [
         'ChainedParentProduct' => Product::class . '.ChainedProduct',
     ];
     /**
@@ -84,7 +86,7 @@ class ProductExtension extends DataExtension
      *
      * @var array
      */
-    private static $casting = [
+    private static array $casting = [
         'ChainedProductPriceLabel' => 'Text',
         'ProductNumberAndTitle'    => 'Text',
     ];
@@ -93,9 +95,6 @@ class ProductExtension extends DataExtension
      * Resets self assigned cheined product relations.
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 20.08.2019
      */
     public function requireDefaultRecords() : void
     {
@@ -111,9 +110,6 @@ class ProductExtension extends DataExtension
      * @param FieldList $fields Fields to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateCMSFields(FieldList $fields) : void
     {
@@ -150,9 +146,6 @@ class ProductExtension extends DataExtension
      * @param array &$labels Labels to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateFieldLabels(&$labels) : void
     {
@@ -165,9 +158,6 @@ class ProductExtension extends DataExtension
      * @param string &$content Content to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateAfterPriceNiceContent(string &$content) : void
     {
@@ -190,9 +180,6 @@ class ProductExtension extends DataExtension
      * @param string &$content Content to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateBeforePriceNiceContent(string &$content) : void
     {
@@ -220,6 +207,9 @@ class ProductExtension extends DataExtension
             $product = $this->owner;
             while ($product->ChainedParentProduct()->exists()) {
                 $product = $product->ChainedParentProduct();
+                if ($product->MaximumCartQuantity <= 0) {
+                    continue;
+                }
                 $parts[] = $product->renderWith(self::class . '_BeforePriceNiceParent');
             }
             $content .= implode('', array_reverse($parts));
@@ -236,9 +226,6 @@ class ProductExtension extends DataExtension
      * @param string &$content Content to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateAfterShoppingCartAjaxResponseContent(string &$content) : void
     {
@@ -259,9 +246,6 @@ class ProductExtension extends DataExtension
      * @param string &$content Content to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateBeforeShoppingCartAjaxResponseContent(string &$content) : void
     {
@@ -293,9 +277,6 @@ class ProductExtension extends DataExtension
      * @param string &$content Content to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 10.04.2019
      */
     public function updateOverwriteShoppingCartAjaxResponseContent(string &$content) : void
     {
@@ -455,9 +436,6 @@ class ProductExtension extends DataExtension
      * @param ShoppingCartPosition &$position         Affected shopping cart position
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateAddToCart(int $cartID, float $quantity, bool $increment, bool &$addToCartAllowed, ShoppingCartPosition &$position = null) : void
     {
@@ -515,9 +493,6 @@ class ProductExtension extends DataExtension
      * @param int $cartID Shopping cart ID
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 10.04.2019
      */
     public function updateRemoveFromCart(int $cartID) : void
     {
@@ -569,9 +544,6 @@ class ProductExtension extends DataExtension
      * @param int  $cartID    Shopping cart ID
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateIsInCart(bool &$isInCart, int $cartID = null) : void
     {
@@ -603,9 +575,6 @@ class ProductExtension extends DataExtension
      * @param float &$quantity Quantity to update
      * 
      * @return void
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function updateQuantityInCart(float &$quantity) : void
     {
@@ -627,14 +596,11 @@ class ProductExtension extends DataExtension
      * Returns the shopping cart position for this product and the given $cartID.
      * If the position doesn't exist yet, it will be created.
      * 
-     * @param int $cartID Shopping cart ID
+     * @param int|null $cartID Shopping cart ID
      * 
      * @return ShoppingCartPosition
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
-    public function getShoppingCartPosition(int $cartID = null) : ShoppingCartPosition
+    public function getShoppingCartPosition(int|null $cartID = null) : ShoppingCartPosition
     {
         if (is_null($cartID)) {
             $user = Security::getCurrentUser();
@@ -670,14 +636,11 @@ class ProductExtension extends DataExtension
      * Returns the shopping cart position for the chained parent product and the 
      * given $cartID.
      * 
-     * @param int $cartID Shopping cart ID
+     * @param int|null $cartID Shopping cart ID
      * 
      * @return ShoppingCartPosition
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
-    public function getChainedParentProductShoppingCartPosition(int $cartID = null) : ?ShoppingCartPosition
+    public function getChainedParentProductShoppingCartPosition(int|null $cartID = null) : ?ShoppingCartPosition
     {
         if (is_null($cartID)) {
             $user = Security::getCurrentUser();
@@ -697,14 +660,11 @@ class ProductExtension extends DataExtension
      * Returns the shopping cart position for the chained product and the given 
      * $cartID.
      * 
-     * @param int $cartID Shopping cart ID
+     * @param int|null $cartID Shopping cart ID
      * 
      * @return ShoppingCartPosition
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
-    public function getChainedProductShoppingCartPosition(int $cartID = null) : ?ShoppingCartPosition
+    public function getChainedProductShoppingCartPosition(int|null $cartID = null) : ?ShoppingCartPosition
     {
         if (is_null($cartID)) {
             $user = Security::getCurrentUser();
@@ -727,9 +687,6 @@ class ProductExtension extends DataExtension
      * @param int $cartID Shopping cart ID
      * 
      * @return Product
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function deleteChainedProductShoppingCartPosition(int $cartID) : Product
     {
@@ -751,9 +708,6 @@ class ProductExtension extends DataExtension
      *                                 method will be called or not.
      * 
      * @return ShoppingCartPosition
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function incrementShoppingCartQuantity(int $cartID, float $quantity, bool &$addToCartAllowed) : ShoppingCartPosition
     {
@@ -882,9 +836,6 @@ class ProductExtension extends DataExtension
      * Returns whether the current add-to-cart routine is going through the chain.
      * 
      * @return bool
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 08.04.2019
      */
     public function isGoingThroughTheChain() : bool
     {
@@ -908,9 +859,6 @@ class ProductExtension extends DataExtension
      * Returns whether the updateAfterPriceNiceContent hook is currently called.
      * 
      * @return bool
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 10.04.2019
      */
     public function isUpdateAfterPriceNiceContent() : bool
     {
@@ -934,9 +882,6 @@ class ProductExtension extends DataExtension
      * Returns whether the updateBeforePriceNiceContent hook is currently called.
      * 
      * @return bool
-     * 
-     * @author Sebastian Diel <sdiel@pixeltricks.de>
-     * @since 10.04.2019
      */
     public function isUpdateBeforePriceNiceContent() : bool
     {
