@@ -9,6 +9,7 @@ use SilverCart\Model\Order\ShoppingCartPosition;
 use SilverCart\Model\Pages\CartPage;
 use SilverCart\Model\Product\Product;
 use SilverCart\Model\Product\ProductTranslation;
+use SilverCart\ProductServices\Model\Product\Service;
 use SilverCart\ProductWizard\Model\Wizard\StepOption;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -233,8 +234,7 @@ class ProductExtension extends DataExtension
         while ($position instanceof ShoppingCartPosition
             && $position->exists()
         ) {
-            $content .= "<span class=\"h2\">{$position->getTypeSafeQuantity()}x</span>";
-            $content .= $position->Product()->renderWith('SilverCart\Model\Order\Includes\ShoppingCart_AjaxResponse_Position');
+            $content .= $position->renderWith('SilverCart\Model\Order\Includes\ShoppingCart_AjaxResponse_Position');
             $position = $position->Product()->getChainedProductShoppingCartPosition();
         }
     }
@@ -253,40 +253,8 @@ class ProductExtension extends DataExtension
         while ($chainedParentPosition instanceof ShoppingCartPosition
          && $chainedParentPosition->exists()
         ) {
-            $content .= "<span class=\"h2\">{$chainedParentPosition->getTypeSafeQuantity()}x</span>";
-            $content .= $chainedParentPosition->Product()->renderWith('SilverCart\Model\Order\Includes\ShoppingCart_AjaxResponse_Position');
+            $content              .= $chainedParentPosition->renderWith('SilverCart\Model\Order\Includes\ShoppingCart_AjaxResponse_Position');
             $chainedParentPosition = $chainedParentPosition->Product()->getChainedParentProductShoppingCartPosition();
-        }
-        $chainedParentPosition = $this->getChainedParentProductShoppingCartPosition();
-        $chainedPosition       = $this->getChainedProductShoppingCartPosition();
-        $position              = $this->getShoppingCartPosition();
-        if ((($chainedParentPosition instanceof ShoppingCartPosition
-           && $chainedParentPosition->exists())
-          || ($chainedPosition instanceof ShoppingCartPosition
-           && $chainedPosition->exists()))
-         && $position->Quantity > 0
-        ) {
-            $content .= "<span class=\"h2\">{$position->getTypeSafeQuantity()}x</span>";
-        }
-    }
-    
-    /**
-     * Updates the content to render instead of the context product's shopping 
-     * cart ajax response default content.
-     * 
-     * @param string &$content Content to update
-     * 
-     * @return void
-     */
-    public function updateOverwriteShoppingCartAjaxResponseContent(string &$content) : void
-    {
-        $chainedParentPosition = $this->getChainedParentProductShoppingCartPosition();
-        $position              = $this->getShoppingCartPosition();
-        if (($chainedParentPosition instanceof ShoppingCartPosition
-          && $chainedParentPosition->exists())
-         && $position->Quantity == 0
-        ) {
-            $content .= "<span></span>";
         }
     }
     
@@ -463,10 +431,29 @@ class ProductExtension extends DataExtension
             $addToCartAllowed = false;
             return;
         }
-        $request = Controller::curr()->getRequest();
-        $backURL = $request->postVar('BackURL');
-        $page    = SiteTree::get_by_link($backURL);
-        if ($page instanceof CartPage) {
+        $request   = Controller::curr()->getRequest();
+        $backURL   = $request->postVar('BackURL');
+        $page      = SiteTree::get_by_link($backURL);
+        $params    = $request->allParams();
+        $postVars  = $request->postVars();
+        $productID = (int) $params['ID'];
+        if ($productID === 0
+         && array_key_exists('productID', $postVars)
+        ) {
+            $productID = (int) $postVars['productID'];
+        }
+        $isPartOfChain = false;
+        if ($productID > 0) {
+            $initProduct = Product::get()->byID($productID);
+            if ($initProduct instanceof Product
+             && $initProduct->isPartOfChain($product)
+            ) {
+                $isPartOfChain = true;
+            }
+        }
+        if ($page instanceof CartPage
+         && $isPartOfChain
+        ) {
             if ($position === null) {
                 $position = $product->getShoppingCartPosition($cartID);
             }
@@ -484,6 +471,24 @@ class ProductExtension extends DataExtension
             $position = $this->incrementShoppingCartQuantity($cartID, $quantity, $addToCartAllowed);
         } else {
             $position = $this->setShoppingCartQuantity($cartID, $quantity, $addToCartAllowed);
+        }
+    }
+    
+    /**
+     * On after add to cart.
+     * 
+     * @param ShoppingCartPosition $position      Position
+     * @param bool                 $isNewPosition Is new position?
+     * 
+     * @return void
+     */
+    public function onAfterAddToCart(ShoppingCartPosition $position, bool $isNewPosition) : void
+    {
+        // Service support
+        if ($position->Product() instanceof Service
+         && $position->ServiceParentPosition()->exists()
+        ) {
+           $position->ServiceParentPosition()->Product()->addServicePosition($position);
         }
     }
     
@@ -593,6 +598,27 @@ class ProductExtension extends DataExtension
     }
     
     /**
+     * Updates the add-to-cart position filter.
+     * 
+     * @param array &$filter Filter
+     * @param int   $cartID  Cart ID
+     * 
+     * @return void
+     */
+    public function updateAddToCartPositionFilter(array &$filter, int $cartID) : void
+    {
+        $parent = $this->getChainedParentProductShoppingCartPosition($cartID);
+        if ($parent instanceof ShoppingCartPosition
+         && $parent->Product() instanceof Service
+         && $parent->ServiceParentPosition()->exists()
+        ) {
+            $filter = array_merge($filter, [
+                'ServiceParentPositionID' => $parent->ServiceParentPosition()->ID,
+            ]);
+        }
+    }
+    
+    /**
      * Returns the shopping cart position for this product and the given $cartID.
      * If the position doesn't exist yet, it will be created.
      * 
@@ -613,20 +639,21 @@ class ProductExtension extends DataExtension
         $product = $this->owner;
         /* @var $product Product */
         $isNewPosition = false;
-        $position      = ShoppingCartPosition::get()->filter([
-            'ProductID'      => $product->ID,
-            'ShoppingCartID' => $cartID,
-        ])->first();
+        $filter        = $product->getAddToCartPositionFilter($cartID);
+        $position      = ShoppingCartPosition::get()->filter($filter)->first();
         if (!($position instanceof ShoppingCartPosition)
          || !$position->exists()
         ) {
             $isNewPosition = true;
             $position      = ShoppingCartPosition::create()
-                    ->castedUpdate([
-                        'ShoppingCartID' => $cartID,
-                        'ProductID'      => $product->ID,
-                    ]);
+                    ->castedUpdate($filter);
             $position->write();
+            // Service support
+            if ($product instanceof Service
+             && $position->ServiceParentPosition()->exists()
+            ) {
+               $position->ServiceParentPosition()->Product()->addServicePosition($position);
+            }
         }
         $position->IsNewPosition = $isNewPosition;
         return $position;
@@ -774,6 +801,31 @@ class ProductExtension extends DataExtension
             $addToCartAllowed = false;
         }
         return $position;
+    }
+    
+    /**
+     * Returns whther $this->owner is part of the given $product's chain.
+     * 
+     * @param Product $product Product
+     * 
+     * @return bool
+     */
+    public function isPartOfChain(Product $product) : bool
+    {
+        $is      = false;
+        $chained = $this->owner;
+        while ($chained instanceof Product
+            && $chained->exists()
+        ) {
+            if ($product->ID === $chained->ID
+             || $product->ID === $chained->ChainedProductID
+             || $product->ID === $chained->ChainedParentProduct()->ID
+            ) {
+                return true;
+            }
+            $chained = $chained->ChainedProduct();
+        }
+        return $is;
     }
 
     /**

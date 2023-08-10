@@ -7,6 +7,9 @@ SilverCart\Forms\RemovePositionForm:
 SilverCart\Model\Order\ShoppingCart:
     extensions:
         - SilverCart\ProductChains\Extensions\Model\Order\ShoppingCartExtension
+SilverCart\Model\Order\ShoppingCartPosition:
+    extensions:
+        - SilverCart\ProductChains\Extensions\Model\Order\ShoppingCartPositionExtension
 SilverCart\Model\Product\Product:
     extensions:
         - SilverCart\ProductChains\Extensions\Model\Product\ProductExtension
