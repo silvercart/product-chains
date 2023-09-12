@@ -854,6 +854,20 @@ class ProductExtension extends DataExtension
     }
     
     /**
+     * Returns the minimum cart quantity in chain context.
+     * 
+     * @return int
+     */
+    public function getChainedMinimumCartQuantity() : int
+    {
+        $min = 1;
+        if ($this->hasChainedParentProduct()) {
+            $min = $this->owner->ChainedParentProduct()->MaximumCartQuantity + 1;
+        }
+        return $min;
+    }
+    
+    /**
      * Returns whether this product has a chained product.
      * 
      * @return bool
