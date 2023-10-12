@@ -534,6 +534,11 @@ class ProductExtension extends DataExtension
         if ($product->hasChainedProduct()) {
             $chainedProduct = $product->ChainedProduct();
             while ($chainedProduct->exists()) {
+                if ($product instanceof Service
+                 && $product->getServiceParentPosition() instanceof ShoppingCartPosition
+                ) {
+                    $chainedProduct->setServiceParentPosition($product->getServiceParentPosition());
+                }
                 $position       = $chainedProduct->getShoppingCartPosition($cartID);
                 $quantity      += $position->Quantity;
                 $chainedProduct = $chainedProduct->ChainedProduct();
@@ -640,6 +645,13 @@ class ProductExtension extends DataExtension
         /* @var $product Product */
         $isNewPosition = false;
         $filter        = $product->getAddToCartPositionFilter($cartID);
+        if ($this->owner instanceof Service
+         && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+        ) {
+            $filter = array_merge($filter, [
+                'ServiceParentPositionID' => $this->owner->getServiceParentPosition()->ID,
+            ]);
+        }
         $position      = ShoppingCartPosition::get()->filter($filter)->first();
         if (!($position instanceof ShoppingCartPosition)
          || !$position->exists()
@@ -677,10 +689,18 @@ class ProductExtension extends DataExtension
                 $cartID = $user->ShoppingCart()->ID;
             }
         }
-        return ShoppingCartPosition::get()->filter([
+        $filter = [
             'ProductID'      => $this->owner->ChainedParentProduct()->ID,
             'ShoppingCartID' => $cartID,
-        ])->first();
+        ];
+        if ($this->owner instanceof Service
+         && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+        ) {
+            $filter = array_merge($filter, [
+                'ServiceParentPositionID' => $this->owner->getServiceParentPosition()->ID,
+            ]);
+        }
+        return ShoppingCartPosition::get()->filter($filter)->first();
     }
     
     /**
@@ -749,7 +769,13 @@ class ProductExtension extends DataExtension
         $chainQuantity      = $quantity - $position->Quantity;
         $addToCartAllowed   = false;
         $position->write();
-        $product->ChainedProduct()->addToCart($cartID, $chainQuantity);
+        $chainedProduct = $product->ChainedProduct();
+        if ($this->owner instanceof Service
+         && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+        ) {
+            $chainedProduct->setServiceParentPosition($this->owner->getServiceParentPosition());
+        }
+        $chainedProduct->addToCart($cartID, $chainQuantity);
         return $position;
     }
     
@@ -782,6 +808,11 @@ class ProductExtension extends DataExtension
             do {
                 $chainedProduct->deleteChainedProductShoppingCartPosition($cartID);
                 $chainedProduct = $chainedProduct->ChainedProduct();
+                if ($this->owner instanceof Service
+                 && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+                ) {
+                    $chainedProduct->setServiceParentPosition($this->owner->getServiceParentPosition());
+                }
             } while ($chainedProduct->ChainedProduct()->exists());
             $position = $product->getShoppingCartPosition($cartID);
             $position->Quantity = $quantity;
@@ -797,7 +828,13 @@ class ProductExtension extends DataExtension
             $position->Quantity = $product->MaximumCartQuantity;
             $chainQuantity      = $quantity - $position->Quantity;
             $position->write();
-            $product->ChainedProduct()->addToCart($cartID, $chainQuantity);
+            $chainedProduct = $product->ChainedProduct();
+            if ($this->owner instanceof Service
+             && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+            ) {
+                $chainedProduct->setServiceParentPosition($this->owner->getServiceParentPosition());
+            }
+            $chainedProduct->addToCart($cartID, $chainQuantity);
             $addToCartAllowed = false;
         }
         return $position;

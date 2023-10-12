@@ -27,7 +27,14 @@ class ShoppingCartPositionExtension extends DataExtension
      */
     public function getChainedTotalQuantity() : float
     {
-        return $this->owner->Product()->getChainedShoppingCartQuantity($this->owner->ShoppingCartID);
+        $product = $this->owner->Product();
+        if (class_exists(Service::class)
+         && $this->owner->exists()
+         && $this->owner->ServiceParentPosition()->exists()
+        ) {
+            $product->setServiceParentPosition($this->owner->ServiceParentPosition());
+        }
+        return $product->getChainedShoppingCartQuantity($this->owner->ShoppingCartID);
     }
 
     /**
@@ -46,10 +53,14 @@ class ShoppingCartPositionExtension extends DataExtension
         }
         if ($this->owner->exists()
          && $this->owner->ServiceParentPosition()->exists()
-         && (!$this->owner->Product()->IsRequiredForEachServiceProduct
-          || $this->owner->ServiceParentPosition()->Quantity === $this->owner->getChainedTotalQuantity())
         ) {
-            $isQuantityIncrementableBy = false;
+            $product = $this->owner->Product();
+            $product->setServiceParentPosition($this->owner->ServiceParentPosition());
+            if ((!$product->IsRequiredForEachServiceProduct
+              || $this->owner->ServiceParentPosition()->Quantity === $this->owner->getChainedTotalQuantity())
+            ) {
+                $isQuantityIncrementableBy = false;
+            }
         }
     }
 }
