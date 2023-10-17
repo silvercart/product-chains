@@ -721,10 +721,18 @@ class ProductExtension extends DataExtension
                 $cartID = $user->ShoppingCart()->ID;
             }
         }
-        return ShoppingCartPosition::get()->filter([
+        $filter = [
             'ProductID'      => $this->owner->ChainedProduct()->ID,
             'ShoppingCartID' => $cartID,
-        ])->first();
+        ];
+        if ($this->owner instanceof Service
+         && $this->owner->getServiceParentPosition() instanceof ShoppingCartPosition
+        ) {
+            $filter = array_merge($filter, [
+                'ServiceParentPositionID' => $this->owner->getServiceParentPosition()->ID,
+            ]);
+        }
+        return ShoppingCartPosition::get()->filter($filter)->first();
     }
     
     /**
